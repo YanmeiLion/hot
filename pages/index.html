@@ -12,11 +12,18 @@
 </head>
 
 <body>
-
+	<div id='loadingDiv'>
+		<img src="../images/loading.gif" alt=""/>
+		<p>正在加载</p>
+	</div>
 	<div id="container">
 		<!-- 动态生成 -->
-	</div>
 
+	</div>
+	
+	<footer>
+		版权所有 &copy; ICU
+	</footer>
 
 	<script src="https://unpkg.com/react@16.14.0/umd/react.development.js" crossorigin></script>
 	<script src="https://unpkg.com/react-dom@16.14.0/umd/react-dom.development.js" crossorigin></script>
@@ -31,8 +38,7 @@
 				super();
 				this.state = {
 					list: [],
-					// titles: ['All', 'JavaScript', 'Ruby', 'Java', 'CSS', 'Python'],
-					isShow: 'JavaScript',
+					isShow: 'All',
 					titles: [
 						{ name: 'All', path: 'https://api.github.com/search/repositories?q=stars:%3E1&sort=stars&order=desc&type=Repositories' },
 						{ name: 'JavaScript', path: 'https://api.github.com/search/repositories?q=stars:%3E1+language:javascript&sort=stars&order=desc&type=Repositories' },
@@ -61,10 +67,12 @@
 				const { isShow, titles } = this.state
 				titles.map(item => {
 					if (item.name == isShow) {
+						document.getElementById('loadingDiv').style.display = "";
 						// 发送请求
 						axios.get(`${item.path}`)
 							.then(res => {
 								if (res.status == 200) {
+									document.getElementById('loadingDiv').style.display = "none";
 									this.setState({
 										list: res.data.items
 									})
@@ -76,7 +84,7 @@
 								alert('请求已经达到上限')
 							})
 					}
-				})				
+				})
 			}
 
 			render() {
@@ -119,6 +127,7 @@
 								</li>)}
 							</ul>
 						</div>
+						
 						<div className='mian'>
 							{newDiv}
 						</div>
