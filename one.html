@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Test</title>
+</head>
+
+<body>
+    <div id="container">
+
+    </div>
+
+    <script src="https://unpkg.com/react@16.14.0/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16.14.0/umd/react-dom.development.js" crossorigin></script>
+    <!-- bable是解析jsx必备的库 -->
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/babel">
+
+        class MemoList extends React.Component {
+            constructor(props) {
+                super();
+                this.state = {
+                    list: []
+                }
+            }
+            async componentDidMount() {
+                const res = await axios.get('https://api.github.com/search/repositories?q=stars:%3E1&sort=stars&order=desc&type=Repositories');
+                console.log(res.data.items)
+                this.setState({
+                    list: res.data.items
+                })
+            }
+            render() {
+                const { list } = this.state
+                return (
+                    <div>
+                        <ul>
+                            {
+                                list.map(item => {
+                                    return <li key={item.id}  > {item.name} </li>
+                                })
+                            }
+                        </ul>
+                    </div>
+                )
+            }
+        }
+
+        class App extends React.Component {
+            render() {
+                return (
+                    <div>
+                        <MemoList/>
+                    </div>
+                )
+            }
+        }
+        ReactDOM.render(
+            <App />,
+            document.getElementById('container')
+        )
+
+    </script>
+
+</body>
+
+</html>
